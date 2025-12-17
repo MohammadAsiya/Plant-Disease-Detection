@@ -1,12 +1,12 @@
 version: '3.8'
+
 services:
   web:
-    build:
-      context: ./Flask Deployed App
+    build: .
     ports:
       - "5000:5000"
     volumes:
       - ./Flask Deployed App:/app
     environment:
       - PYTHONUNBUFFERED=1
-    command: gunicorn app:app
+    command: gunicorn app:app -b 0.0.0.0:5000 --workers 2

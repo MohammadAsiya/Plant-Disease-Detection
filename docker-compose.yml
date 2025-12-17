@@ -1,12 +1,12 @@
 version: '3.8'
 
 services:
-  app:
+  plant-disease-app:
     build: .
     ports:
-      - "8000:8000"
+      - "5000:5000"
+    restart: unless-stopped
     volumes:
-      - ./Flask Deployed App:/app
+      - ./Flask\ Deployed\ App:/app
     environment:
       - PYTHONUNBUFFERED=1
-    restart: unless-stopped

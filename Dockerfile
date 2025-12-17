@@ -1,29 +1,25 @@
-# Use official Python image as base
+# Dockerfile for Plant-Disease-Detection Flask App
 FROM python:3.8-slim
 
 # Set working directory
 WORKDIR /app
 
 # Install system dependencies
-RUN apt-get update && apt-get install -y \
+RUN apt-get update && apt-get install -y --no-install-recommends \
     build-essential \
-    libglib2.0-0 libsm6 libxrender1 libxext6 \
- && rm -rf /var/lib/apt/lists/*
+    && rm -rf /var/lib/apt/lists/*
 
-# Copy dependency files first for better caching
-COPY Flask Deployed App/requirements.txt ./
+# Copy requirements first for caching
+COPY "Flask Deployed App/requirements.txt" ./requirements.txt
 
-# Install python dependencies
+# Install Python dependencies
 RUN pip install --no-cache-dir -r requirements.txt
 
-# Copy application code
-COPY Flask Deployed App/ ./
+# Copy app source code into container
+COPY "Flask Deployed App" .
 
-# Expose Flask default port 5000
+# Expose port 5000 (Flask default)
 EXPOSE 5000
 
-# Set environment variable to disable buffering for logs
-ENV PYTHONUNBUFFERED=1
-
-# Run app using gunicorn process manager
-CMD ["gunicorn", "app:app", "-b", "0.0.0.0:5000", "--workers", "2"]
+# Use gunicorn to run the app according to Procfile
+CMD ["gunicorn", "app:app", "--bind", "0.0.0.0:5000"]
